@@ -2,6 +2,12 @@ from notebook.utils import url_path_join
 from .invoke import InvokeNotebookHandler
 
 
+def _jupyter_server_extension_paths():
+    return [{
+        "module": "jupyter_invoke"
+    }]
+
+
 def load_jupyter_server_extension(nb_server_app):
     """Called when the extension is loaded
 
