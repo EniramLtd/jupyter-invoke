@@ -16,7 +16,7 @@ Installation
 You can enable the server extension in all new notebook servers by
 running
 
-.. code-block::
+.. code-block:: bash
 
     jupyter serverextension enable --py jupyter_invoke
 
