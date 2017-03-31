@@ -90,9 +90,11 @@ def respond(output, mimetype=JSON_OUTPUT, **kwargs):
     At the end of the notebook cell, call ``respond``:
 
     >>> a = {'a': [1, 2], 'b': [3, 4]}
-    >>> respond(a, JSON_OUTPUT)
+    >>> response = respond(a, JSON_OUTPUT)
     <IPython.core.display.Javascript object>
     The following output will be provided as JSON in invocation:
+    >>> from pprint import pprint  # for sorted printing of dicts
+    >>> pprint(response.data)
     {'a': [1, 2], 'b': [3, 4]}
     >>> import pandas as pd
     >>> respond(pd.DataFrame(a), CSV_OUTPUT)
