@@ -13,7 +13,13 @@ class InvokeNotebookHandler(IPythonHandler):
     def get(self, notebook_name):
         try:
             output, mimetype = execute_notebook(notebook_name)
+            output_filename = os.path.basename(notebook_name)
+            output_filename = output_filename.replace('.ipynb', '')
+            ext = mimetype.split('/')[-1]
             self.set_header('Content-Type', mimetype)
+            self.set_header('Content-Disposition',
+                            'inline; filename="{}.{}"'
+                            ''.format(output_filename, ext))
             self.finish(output)
         except InvokeException as e:
             self.set_status(e.status_code)
