@@ -74,11 +74,10 @@ def parse_execute_output(executed_notebook, notebook_name):
     for nb in executed_notebook:
         for cell in nb.get('cells', []):
             for output in cell.get('outputs', []):
-                metadata = output['metadata']
                 if (output['output_type'] == 'execute_result'
-                        and JSON_OUTPUT in metadata
-                        and INVOKE_TAG in metadata[JSON_OUTPUT]):
-                    output_type = metadata[JSON_OUTPUT][INVOKE_TAG]
+                        and JSON_OUTPUT in output['metadata']
+                        and INVOKE_TAG in output['metadata'][JSON_OUTPUT]):
+                    output_type = output['metadata'][JSON_OUTPUT][INVOKE_TAG]
                     result = output['data'][output_type]
                     # FIXME: Ugly special case for CSV output
                     if CSV_OUTPUT in result:
