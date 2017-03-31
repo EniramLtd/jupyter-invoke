@@ -11,7 +11,7 @@ working with Pandas DataFrames, JSON output is works with
 Use :func:`respond` to wrap the cell output for invocation.
 
 """
-from IPython.display import JSON
+from IPython.display import display, JSON, Javascript
 import json
 
 try:
@@ -60,7 +60,7 @@ class RespondCSV(RespondJSON):
     The CSV is put into the JSON field and in the notebook
     execution phase it is extracted from it.  This work-around
     was made because IPython did not have built-in support for CSV.
-    
+
     """
     def __init__(self, x, **kwargs):
         super(RespondCSV, self).__init__(x)
@@ -91,12 +91,29 @@ def respond(output, mimetype=JSON_OUTPUT, **kwargs):
 
     >>> a = {'a': [1, 2], 'b': [3, 4]}
     >>> respond(a, JSON_OUTPUT)
+    <IPython.core.display.Javascript object>
+    The following output will be provided as JSON in invocation:
     {'a': [1, 2], 'b': [3, 4]}
+    >>> import pandas as pd
+    >>> respond(pd.DataFrame(a), CSV_OUTPUT)
+    <IPython.core.display.Javascript object>
+    The following output will be provided as CSV in invocation:
+       a  b
+    0  1  3
+    1  2  4
+
+    In the above example the JavaScript object means that the
+    notebook displays the URL for the invocation.
 
     Now the notebook cell output is marked as the output
-    for the invocation and this is provided as JSON.
+    for the invocation from the URL of the notebook where
+    ``/notebooks/`` is replaced with ``/invoke/``. 
 
     """
+    output_type = mimetype.split('/')[-1].upper()
+    _js_invoke_path(output_type)
+    print('The following output will be provided as {} in invocation:'
+          ''.format(output_type))
     if mimetype == JSON_OUTPUT:
         return RespondJSON(output, **kwargs)
     elif mimetype == CSV_OUTPUT:
@@ -104,3 +121,19 @@ def respond(output, mimetype=JSON_OUTPUT, **kwargs):
     else:
         raise ValueError('Unknown output type {}, use "{}" or "{}".'
                          ''.format(mimetype, JSON_OUTPUT, CSV_OUTPUT))
+
+
+def _js_invoke_path(output_type):
+    """Display the invoke address in Jupyter
+    
+    Currently this also saves the invoke address in the notebook
+    to the Python variable ``current_invoke_address``.
+    
+    """
+    display(Javascript("""
+        var kernel = IPython.notebook.kernel;
+        var address = window.location.href.replace('/notebooks/', '/invoke/');
+        var command = 'current_invoke_address = ' + "'" + address + "'";
+        kernel.execute(command)
+        alert('{} available at ' + address + ' after saving the notebook.');
+        """.format(output_type)))

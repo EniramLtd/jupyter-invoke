@@ -5,7 +5,7 @@ from notebook.base.handlers import IPythonHandler
 
 import os
 
-from .respond import CSV_OUTPUT, JSON_OUTPUT, INVOKE_TAG
+from .response import CSV_OUTPUT, JSON_OUTPUT, INVOKE_TAG
 
 
 class InvokeNotebookHandler(IPythonHandler):

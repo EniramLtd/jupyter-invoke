@@ -40,7 +40,7 @@ of one cell to mark it as providing the invocation output:
 
 .. code-block:: python
 
-    from jupyter_invoke.respond import respond
+    from jupyter_invoke import respond
     a = {'a': [1, 2, 3]}
     respond(a)
 
