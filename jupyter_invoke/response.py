@@ -137,6 +137,6 @@ def _js_invoke_path(output_type):
         var kernel = IPython.notebook.kernel;
         var address = window.location.href.replace('/notebooks/', '/invoke/');
         var command = 'current_invoke_address = ' + "'" + address + "'";
-        kernel.execute(command)
+        kernel.execute(command);
         alert('{} available at ' + address + ' after saving the notebook.');
         """.format(output_type)))
