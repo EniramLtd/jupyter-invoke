@@ -3,8 +3,8 @@ Jupyter-Invoke
 ==============
 
 This package provides an extension to Jupyter notebook server, which enables
-executing notebooks non-interactively and obtaining output with HTTP
-requests.
+executing notebooks non-interactively and obtaining JSON or CSV output with
+HTTP requests.
 
 Installation
 ============
@@ -13,8 +13,15 @@ Installation
 
     pip install git+https://github.com/EniramLtd/jupyter-invoke.git
 
-You can enable the server extension at command line when you start the
-server:
+You can enable the server extension in all new notebook servers by
+running
+
+.. code-block:: bash
+
+    jupyter serverextension enable --py jupyter_invoke
+
+You can also enable the extension at command line when you a start
+particular server:
 
 .. code-block:: bash
 
@@ -29,8 +36,7 @@ Alternatively, you can set the variable in a `Jupyter config file`_:
         'jupyter_invoke': True,
     }
 
-.. _`Jupyter config file`: http://jupyter-notebook.readthedocs.io/en/latest/config_overview.html  
-
+.. _`Jupyter config file`: http://jupyter-notebook.readthedocs.io/en/latest/config_overview.html
 
 Usage
 =====
@@ -40,7 +46,7 @@ of one cell to mark it as providing the invocation output:
 
 .. code-block:: python
 
-    from jupyter_invoke.respond import respond
+    from jupyter_invoke import respond
     a = {'a': [1, 2, 3]}
     respond(a)
 

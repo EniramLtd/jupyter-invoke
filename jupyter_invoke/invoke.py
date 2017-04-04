@@ -5,7 +5,7 @@ from notebook.base.handlers import IPythonHandler
 
 import os
 
-from .respond import CSV_OUTPUT, JSON_OUTPUT, INVOKE_TAG
+from .response import CSV_OUTPUT, JSON_OUTPUT, INVOKE_TAG
 
 
 class InvokeNotebookHandler(IPythonHandler):
@@ -13,7 +13,13 @@ class InvokeNotebookHandler(IPythonHandler):
     def get(self, notebook_name):
         try:
             output, mimetype = execute_notebook(notebook_name)
+            output_filename = os.path.basename(notebook_name)
+            output_filename = output_filename.replace('.ipynb', '')
+            ext = mimetype.split('/')[-1]
             self.set_header('Content-Type', mimetype)
+            self.set_header('Content-Disposition',
+                            'inline; filename="{}.{}"'
+                            ''.format(output_filename, ext))
             self.finish(output)
         except InvokeException as e:
             self.set_status(e.status_code)
@@ -68,11 +74,10 @@ def parse_execute_output(executed_notebook, notebook_name):
     for nb in executed_notebook:
         for cell in nb.get('cells', []):
             for output in cell.get('outputs', []):
-                metadata = output['metadata']
                 if (output['output_type'] == 'execute_result'
-                        and JSON_OUTPUT in metadata
-                        and INVOKE_TAG in metadata[JSON_OUTPUT]):
-                    output_type = metadata[JSON_OUTPUT][INVOKE_TAG]
+                        and JSON_OUTPUT in output['metadata']
+                        and INVOKE_TAG in output['metadata'][JSON_OUTPUT]):
+                    output_type = output['metadata'][JSON_OUTPUT][INVOKE_TAG]
                     result = output['data'][output_type]
                     # FIXME: Ugly special case for CSV output
                     if CSV_OUTPUT in result:
