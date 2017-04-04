@@ -89,20 +89,21 @@ def respond(output, mimetype=JSON_OUTPUT, **kwargs):
 
     At the end of the notebook cell, call ``respond``:
 
-    >>> a = {'a': [1, 2], 'b': [3, 4]}
-    >>> response = respond(a, JSON_OUTPUT)
+    >>> a = {'a': [1, 2, 3]}
+    >>> respond(a, JSON_OUTPUT)
     <IPython.core.display.Javascript object>
     The following output will be provided as JSON in invocation:
-    >>> from pprint import pprint  # for sorted printing of dicts
-    >>> pprint(response.data)
-    {'a': [1, 2], 'b': [3, 4]}
+    {'a': [1, 2, 3]}
     >>> import pandas as pd
-    >>> respond(pd.DataFrame(a), CSV_OUTPUT)
+    >>> b = pd.DataFrame(a)
+    >>> b['b'] = [4, 5, 6]
+    >>> respond(b, CSV_OUTPUT)
     <IPython.core.display.Javascript object>
     The following output will be provided as CSV in invocation:
        a  b
-    0  1  3
-    1  2  4
+    0  1  4
+    1  2  5
+    2  3  6
 
     In the above example the JavaScript object means that the
     notebook displays the URL for the invocation.
