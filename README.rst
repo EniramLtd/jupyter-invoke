@@ -66,7 +66,7 @@ the field ``error`` and an explanation.
 Limitations
 ===========
 
-Only Python 3 and notebook version 4 are supported.  Jupyter
-version may also affect the functionality.  Running the tests
-with ``python setup.py test`` cover some functionality but
-not the actual integration with a server.
+Only Python 3 and notebook versions above 4 are supported.
+``python setup.py test`` can be used for testing but it
+does not cover the actual integration with a server.
+
