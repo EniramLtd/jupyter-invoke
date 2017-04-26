@@ -127,16 +127,10 @@ def respond(output, mimetype=JSON_OUTPUT, **kwargs):
 
 
 def _js_invoke_path(output_type):
-    """Display the invoke address in Jupyter
-    
-    Currently this also saves the invoke address in the notebook
-    to the Python variable ``current_invoke_address``.
-    
-    """
+    """Display the invoke address in Jupyter"""
     display(Javascript("""
-        var kernel = IPython.notebook.kernel;
         var address = window.location.href.replace('/notebooks/', '/invoke/');
-        var command = 'current_invoke_address = ' + "'" + address + "'";
-        kernel.execute(command);
-        alert('{} available at ' + address + ' after saving the notebook.');
+        alert('{} available at ' + address + ' after saving the notebook ' +
+              '(the notebook server may impose limitations regarding ' +
+              'acceptable notebook file names).');
         """.format(output_type)))
