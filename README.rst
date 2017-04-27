@@ -58,17 +58,19 @@ Allowing only certain notebooks to be invoked
 ---------------------------------------------
 
 It is possible to restrict the invocation to only particularly
-named notebooks.  Starting the notebook server, we can specify
-an environment variable ``INVOKE_FILENAME_PATTERN`` with a
-regex that matches the filename from the end (before ``.ipynb``).
-For instance, we can start the server like this:
+named notebooks.  There is a configuration parameters
+``Invoker.filename_pattern`` which, if specified, matches the end of
+the notebook filename (before ``.ipynb``) before allowing the invocation.
+Non-matching notebooks are then invisible to the invoke handler.  As an
+example, consider the following jupyter configuration file that allows only
+files with pattern ``*_invoke.ipynb`` to be invoked:
 
-.. code-block:: bash
+.. code-block:: python
 
-    INVOKE_FILENAME_PATTERN=_invoke jupyter notebook
+    c = get_config()
+    c.Invoker.filename_pattern = '_invoke'
 
-Then all notebooks that do not end with ``_invoke.ipynb`` will be
-invisible to the invoke handler.
+By default, all notebooks can be invoked.
 
 
 Error cases
