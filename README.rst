@@ -54,6 +54,25 @@ This will mark the cell as providing JSON output when querying
 ``http://<server_address>:<port>/invoke/<path/to/notebook.ipynb>``
 
 
+Allowing only certain notebooks to be invoked
+---------------------------------------------
+
+It is possible to restrict the invocation to only particularly
+named notebooks.  There is a configuration parameters
+``Invoker.filename_pattern`` which, if specified, matches the end of
+the notebook filename (before ``.ipynb``) before allowing the invocation.
+Non-matching notebooks are then invisible to the invoke handler.  As an
+example, consider the following jupyter configuration file that allows only
+files with pattern ``*_invoke.ipynb`` to be invoked:
+
+.. code-block:: python
+
+    c = get_config()
+    c.Invoker.filename_pattern = '_invoke'
+
+By default, all notebooks can be invoked.
+
+
 Error cases
 ===========
 
