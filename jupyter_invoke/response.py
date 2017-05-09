@@ -24,9 +24,38 @@ INVOKE_TAG = 'invoke_output'
 CSV_OUTPUT = 'text/csv'
 JSON_OUTPUT = 'application/json'
 
+# This may be assigned to use query parameters with get_param function
+QUERY_PARAMETERS = None
+
 
 def _is_dataframe(x):
     return pd and isinstance(x, pd.DataFrame)
+
+
+def get_param(name, default, optional=False):
+    """Pass query parameters in notebook invocation
+    
+    This function can be used to use HTTP query parameters
+    in an invoked notebook.  In interactive use this uses the
+    given default value.
+    
+    From query parameters this always takes the first occurrence
+    of the corresponding parameter and returns it as a string.
+    
+    By default, this ignores the default value when used in
+    invocation and raises an exception if the parameters is not
+    provided in the query.
+    
+    """
+    if QUERY_PARAMETERS is None:
+        return default
+    if name in QUERY_PARAMETERS:
+        return QUERY_PARAMETERS[name][0].decode()
+    elif optional:
+        return default
+    else:
+        raise ValueError('Parameter {} missing from the query string'
+                         ''.format(name))
 
 
 class RespondJSON(JSON):

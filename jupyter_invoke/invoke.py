@@ -12,7 +12,8 @@ class InvokeNotebookHandler(IPythonHandler):
     """Execute notebook and return the output"""
     def get(self, notebook_name):
         try:
-            output, mimetype = execute_notebook(notebook_name)
+            query_params = self.request.arguments
+            output, mimetype = execute_notebook(notebook_name, query_params)
             output_filename = os.path.basename(notebook_name)
             output_filename = output_filename.replace('.ipynb', '')
             ext = mimetype.split('/')[-1]
@@ -37,13 +38,29 @@ class InvokeException(Exception):
         self.status_code = status_code
 
 
-def execute_notebook(notebook_name):
+def handle_query_parameters(notebook, query_parameters):
+    """Insert a cell in the beginning of the notebook for query parameters
+    
+    This modifies the notebook so that :func:`jupyter_invoke.respond.get_param`
+    look for keys and values from given HTTP request parameters
+    
+    """
+    first_cell = {'cell_type': 'code',
+                  'source': "from jupyter_invoke import response\n"
+                             "response.QUERY_PARAMETERS = {!r}"
+                             "".format(query_parameters)}
+    notebook['cells'].insert(0, nbformat.notebooknode.NotebookNode(first_cell))
+
+
+def execute_notebook(notebook_name, query_params=None):
     """Execute the notebook from path and parse the output"""
     if not os.path.exists(notebook_name):
         msg = 'Cannot find notebook {}'.format(notebook_name)
         raise InvokeException(msg, status_code=404)
     with open(notebook_name) as f:
         notebook = nbformat.read(f, as_version=4)
+    if query_params:
+        handle_query_parameters(notebook, query_params)
     ep = ExecutePreprocessor(timeout=300, kernel_name='python3')
     try:
         executed_notebook = ep.preprocess(notebook,

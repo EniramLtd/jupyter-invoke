@@ -2,7 +2,7 @@ from traitlets.config import LoggingConfigurable
 from traitlets import Unicode
 from notebook.utils import url_path_join
 from .invoke import InvokeNotebookHandler
-from .response import respond, JSON_OUTPUT, CSV_OUTPUT
+from .response import respond, JSON_OUTPUT, CSV_OUTPUT, get_param
 
 
 class Invoker(LoggingConfigurable):
