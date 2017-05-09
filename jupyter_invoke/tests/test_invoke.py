@@ -27,3 +27,10 @@ def test_notebooks(nb_name, expected, status_code, error_extra):
         assert expected in e.error_dict['error']
         if error_extra:
             assert error_extra == e.error_dict['outputs']
+
+
+def test_notebook_query_parameters():
+    os.chdir(os.path.dirname(__file__))
+    params = {'par1': [b'10'], 'par3': [b'30']}
+    result = execute_notebook('notebooks/query_params.ipynb', params)
+    assert result == ({'params': ['10', 2, '30']}, 'application/json')
