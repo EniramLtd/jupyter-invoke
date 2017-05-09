@@ -41,7 +41,8 @@ def load_jupyter_server_extension(nb_server_app):
     filename_pattern = _get_config(web_app)['filename_pattern']
     host_pattern = '.*$'
     route_pattern = url_path_join(web_app.settings['base_url'],
-                                  '/invoke/(.*{}\.ipynb)$'
+                                  '/invoke/(?P<notebook_name>.*{}\.ipynb)'
+                                  '.*$'
                                   ''.format(filename_pattern))
     web_app.add_handlers(host_pattern, [(route_pattern,
                                          InvokeNotebookHandler)])
