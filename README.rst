@@ -41,7 +41,7 @@ Alternatively, you can set the variable in a `Jupyter config file`_:
 Usage
 =====
 
-In a Jupyter notebook, call function ``respond`` at the end
+In a Jupyter notebook, call :func:`jupyter_invoke.response.respond` at the end
 of one cell to mark it as providing the invocation output:
 
 .. code-block:: python
@@ -71,6 +71,27 @@ files with pattern ``*_invoke.ipynb`` to be invoked:
     c.Invoker.filename_pattern = '_invoke'
 
 By default, all notebooks can be invoked.
+
+
+Using query parameters in invocation
+------------------------------------
+
+Parameters can be passed to the notebook in URL query strings by using
+:func:`jupyter_invoke.response.get_param`.  For instance,
+
+.. code-block:: python
+
+    from jupyter_invoke import get_param, respond
+    key = get_param('key', 'a', optional=False)
+    a = {key: [1, 2, 3]}
+    respond(a)
+
+Now we would need to invoke the notebook with a query string like
+``?key=b`` or otherwise the there will be an error.  In interactive
+use the notebook will use the second, default value, parameter for
+the variable.  If the ``optional`` flag is set to True, the default
+value may also be used in invocation if the parameters isn't provided
+in the query.
 
 
 Error cases
