@@ -54,8 +54,8 @@ def get_param(name, default, optional=False):
     elif optional:
         return default
     else:
-        raise ValueError('Parameter {} missing from the query string'
-                         ''.format(name))
+        raise ValueError('Required parameter "{}" missing from the query '
+                         'string'.format(name))
 
 
 class RespondJSON(JSON):
