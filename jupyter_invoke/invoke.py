@@ -59,8 +59,7 @@ def execute_notebook(notebook_name, query_params=None):
         raise InvokeException(msg, status_code=404)
     with open(notebook_name) as f:
         notebook = nbformat.read(f, as_version=4)
-    if query_params:
-        handle_query_parameters(notebook, query_params)
+    handle_query_parameters(notebook, query_params)
     ep = ExecutePreprocessor(timeout=300, kernel_name='python3')
     try:
         executed_notebook = ep.preprocess(notebook,
